@@ -1,4 +1,32 @@
-word = "ant"
+from random import choice
+
+word = choice(['Algorithm',
+        'Encryption',
+        'Database',
+        'Firewall',
+        'API',
+        'Server',
+        'Protocol',
+        'HTML',
+        'CSS',
+        'JavaScript',
+        'Compiler',
+        'Debugging',
+        'Virtualization',
+        'Artificial Intelligence',
+        'Machine Learning',
+        "Cloud Computing",
+        "Big Data",
+        "Cybersecurity",
+        "Network",
+        "Operating System"]).lower()
+
+print(word)
+
+
+
+
+guessed_letters = [] # empty list tracking correct letters
 
 HANGMAN_PICS = ['''
     +---+
@@ -8,7 +36,7 @@ HANGMAN_PICS = ['''
     ===''', '''
     +---+
     O   |
-        | 
+        |
         |
        ===''', '''
     +---+
@@ -37,33 +65,38 @@ HANGMAN_PICS = ['''
    / \  |
     ===''']
 
+def display_word(word, guessed_letters): # defines a function called display_word
+    display = "" # empty string called display
+    for letter in word: #Iterates over each letter in the word parameter.
+        if letter in guessed_letters: #Checks if the letter is in the guessed_letters list.
+            display += letter # it appends the letter to the display string.
+        else: # Executes if the letter is not in guessed_letters.
+            display += "_" # Appends an underscore (_) to the display string.
+    print("Current word:", display) # Prints the current state of the word, with guessed letters revealed and underscores for unguessed letters.
+    return display # Returns the display string.
 
-guess = input("Guess the letter: ")
+def game_board(guess, attempts): # Taking in two parameters named guess and attempts. 
+    if guess in word: 
+        print("Good guess")
+        guessed_letters.append(guess)
+        # print(HANGMAN_PICS[attempts])
 
-def num_of_tries(attempts):
-    max = 7
+    else:
+        print("Oops! That is not correct.")
+        print(HANGMAN_PICS[attempts]) 
+    attempts += 1  # Increment the number of attempts
+        
     
-    while attempts <= 7:
-        max -=1
-    pass
+    display = display_word(word, guessed_letters)
 
-
-def game_board(guess): 
-    num_tries = 7
-    if num_tries == 0: 
-        print("Game over") 
+    if "_" not in display:  # Check if the word is fully guessed
+        print("Winner!")  # The player has guessed the entire word
         return
-    if guess in word:
-        while num_tries > 1 and num_tries <=7:
-            print("Good guess")
-            print(HANGMAN_PICS[0]) 
-            num_tries -= 1
-            print(f"Tries left: {num_tries}")
-            another_guess = input("Guess again: ")
-            # game_board(another_guess)
-    # else:
-    #     print("Oops! That is not correct.")
-
-game_board(guess)
-
-# Comment
+    elif attempts < 7:  # Check if the player has more attempts left
+        another_guess = input("Guess again: ")
+        game_board(another_guess, attempts)
+    else:
+        print("Game over")  # The player has reached the maximum number of attempts
+        return # ends the function 
+guess = input("Guess the letter: ")
+game_board(guess, 0)  # Start the game with 0 attempts
